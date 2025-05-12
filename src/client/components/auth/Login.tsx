@@ -25,6 +25,10 @@ function Login() {
         })
       }
 
+      <div className={styles.footer}>
+        Source code is available on <a href="https://github.com/tableau/e-bikes-demo">GitHub</a>
+    </div>
+
     </div>
   )
 }

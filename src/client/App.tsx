@@ -39,14 +39,14 @@ export const useAppContext = () => useContext(AppContext);
 export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
-  const [userLicense, setUserLicense] = useState<string>('Basic');
+  const [userLicense, setUserLicense] = useState<LicenseType>('Basic');
 
   const notificationReceived = (notifications: NotificationItem[]) => {
     setNotifications(notifications);
   }
 
-  const updateUserLicense = () => {
-    setUserLicense('Premium');
+  const updateUserLicense = (license: LicenseType) => {
+    setUserLicense(license);
   }
 
   return (

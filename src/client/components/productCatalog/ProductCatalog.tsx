@@ -27,7 +27,6 @@ function ProductCatalog() {
 
   const { userLicense } = useAppContext();
 
-
   useEffect(() => {
     (async () => {
       if (sales && sales.length > 0) {
