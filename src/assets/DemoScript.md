@@ -1,55 +1,60 @@
 # E-Bikes Demo Script
 
 ## Context
-E-Bikes is a manufacturer of electronic bikes. They are using a partner network of retail stores to distribute their e-bikes to their customers. This is a typical scenario for our embedding customers who want to share internal data with their external partners. 
 
-In this demo, there are 2 actors
-1. Mario, who is employed by e-bikes and is responsible for the partner relations
-2. McKenzie, who is the owner of a retail store selling the e-bikes
+E-Bikes is a manufacturer of electric bikes that distributes through a partner network of retail stores. This setup mirrors many of our embedded analytics customers who need to securely share internal data with external partners.
 
-The demo shows Analyst features for Mario, and Business User capabilies for McKenzie
+In this demo, you’ll follow two personas:
 
-The application is setup in such a way that you can jump immediately to specific capabilities (see below) if there is something specific that you want to show or see, but you can also follow the story to get a journey of all available options in Tableau Embedding.
+1. **Mario** – an E-Bikes employee managing partner relationships.  
+2. **McKenzie** – owner of a retail store selling E-Bikes products.
 
-## Story
+This walkthrough showcases both Analyst capabilities (Mario) and Business User features (McKenzie). You can follow the full story end-to-end, or jump to specific capabilities depending on your audience's interest.
 
-| **Story** | **Do** | **See** |
-|----|-----|-----|
-| McKenzie logs in into the e-bikes application to gain insights into the health of her business. | Click on the McKenzie tile ([jump to](/McKenzie/Home)) | The home page |
-| She opens the Product Catalog to see the dashboard | Click on Product Catalog in the header ([jump to](/McKenzie/product-catalog)) | Notice that the data of the dashboard is filtered to only the data for her retail store (Data Security), which is done with [User Attribute Functions](https://www.tableau.com/blog/unlock-power-personalized-analytics-user-attribute-functions) |
-| With one quick overview she can immediately see what bikes are selling well and which ones are struggling with the $ signs on the bikes | n/a | The applciation uses VizQL Data Service, Tableau's Headless BI solution, which allows API (programmatic) access to the same published data source as the data source that is powering the dashboards on the right | n/a | The returned data is used to determine which bikes should get how many $ signs |
-| She notices the big spike in returns in the dashboard and want to get more insight. She decides that this is a great time to upgrade to the Premium license | Click on the 'Upgrade to premium' link | The premium license gives her access to notifications (in the header), trendline data for individual bikes, and YoY comparisons in the dashboard |
-| While moving her mouse, she notices there is trendlines for the sales and returns behind the bike tiles. After flipping a few tiles she notices that the returns are not limited to a single bike | Hover over the bike tiles | These sparklines are created with VizQL Data Service using a open source charting library ([recharts](https://www.npmjs.com/package/recharts)) |  
-| Also she sees the notification about the Bike Returns in the top right, and decide to Analyze more | Click on the Analyze link ([jump to](/McKenzie/Analyze)) | The alert is powered by the Pulse APIs. In this case it shows from the subscribed Pulse metrics the first one with a negative sentiment (this notification is dynamic, so it might show a notification about Sales or no notification at all) |
-| McKenzie has just started her day and hasn't finished her first cup of coffee yet, so the pink is a bit harsh on the eyes. She toggles the page to dark mode | Click on Dark Mode | Notice that not only the background of the page is going into dark mode, but that the Pulse metrics are styled accordingly |
-| She notices a big jump in returns on the metrics and in her further analysis she notices there is a specific battery type that has high number of returns | Scroll down (if needed) to get access to the detail Pulse metric and click on Breakdown. Click on some dimensions, including the Battery Type | Notice that the Battery Type has one clear reason for the high number of returns
-| McKenzie decides to ask Pulse the question to make certain that the battery type is also impacting the sales numbers | The question 'Q1' is seeded with the correct text to ask, no action needed | The AI generated answer across the Sales and Returns metrics. Note that the question sometimes doesn't give back an answer due to insufficient data, in that case just proceed to next step. You can point out that this is a scripted question for speeding up the demo, you can click Q2 for another question or type in any question to get any correlation between the Sales and Returns metrics |
-| McKenzie decides to give Mario a call to notify him about this | Click on the profile icon in the top right ([jump to](/)) | You have returned to the login screen |
-| Before Mario takes any action, he decides to some some analysis himself | Click on Analyze in the header ([jump to](/Mario/Analyze)) | The full Tableau experience shows up. In this case, an empty workbook is presented which is already connected to the same published data source |
-| Mario doesn't have a lot of Tableau experience and wants the help of Tableau Agent | Click on the Tableau Agent icon in the top right (next to Show Me), and click on Got It in the Tableau Agent window and type 'Show me the returns by battery type' | Tableau Agent generated the Viz that shows the number of returns by battery type |
-| He now sees that the problem is related to the 300Wh battery type, and he recalls that they recently switched to another factory for that battery. He can now flag this with his management to resolve the issue | n/a | | 
+---
 
-## Capability Overview
-### Embedded Dashboards ([jump to](/McKenzie/product-catalog))
-* Fully functional dashboards
-* Data security with User Attribute Functions (McKenzie only sees data for her retail store Wheelworks)
-* Bi-directional communication (filter data by selecting bike)
-* Monetization with User Attribute Functions (Upgrade to premium)
+## Demo Story
 
-### Headless BI (VizQL Data Service) to query data programmatically ([jump to](/McKenzie/product-catalog))
-* Create custom charts with open source frameworks
-* Visualize data intuitively ($ signs on the bikes)
-* Create actions (notifications)
+| **Scenario** | **Action** | **What to Highlight** |
+|--------------|------------|------------------------|
+| McKenzie logs in to check her store's performance. | Click the **McKenzie** tile ([jump to](/McKenzie/Home)) | Lands on her personalized home page. |
+| She opens the **Product Catalog** dashboard. | Click **Product Catalog** in the header ([jump to](/McKenzie/product-catalog)) | Show how the dashboard is filtered to her store only—powered by [User Attribute Functions](https://www.tableau.com/blog/unlock-power-personalized-analytics-user-attribute-functions). |
+| She quickly sees which bikes are top sellers based on the number of $ signs. | n/a | The app uses the **VizQL Data Service** to programmatically access the same data powering the dashboard. The number of $ signs reflects sales performance. |
+| She spots a spike in returns and wants more insight—time to upgrade. | Click **Upgrade to Premium** | Demonstrates **monetization**: unlocking additional dashboards, more granular data, and features like trendlines, notifications, and YoY comparisons. |
+| She notices subtle trendlines behind the bike tiles and explores further. | Hover over bike tiles | These sparklines are generated using **VizQL Data Service** and rendered with [Recharts](https://www.npmjs.com/package/recharts). |
+| She also sees a red notification about returns and decides to dig deeper. | Click the **Analyze** link ([jump to](/McKenzie/Analyze)) | This is powered by **Pulse APIs**. The alert dynamically shows a relevant Pulse metric with a negative trend (e.g., returns or sales). |
+| The pink theme is too much for a pre-coffee morning—she switches to dark mode. | Click **Dark Mode** | Shows Pulse styling. |
+| Digging deeper, she finds a specific battery type is driving returns. | Scroll to the Pulse metric → Click **Breakdown** → Filter by **Battery Type** | Notice how filtering by dimensions reveals clear root causes—in this case, a problematic battery type. |
+| She wants to confirm whether this battery type also impacts sales. | Click on question Q1 (auto-seeded) | This uses **Pulse Enhanced Q&A** to correlate across multiple metrics. If no answer returns, move on—Q2 offers another pre-scripted question, or type your own. |
+| Concerned, McKenzie calls Mario to report the issue. | Click the profile icon (top right) ([jump to](/)) | Return to the login screen. |
+| Mario wants to run his own analysis before taking action. | Click **Analyze** in the header ([jump to](/Mario/Analyze)) | A blank workbook opens, connected to the same published data source. Full Tableau authoring experience. |
+| He uses **Tableau Agent** to quickly generate insights. | Click the **Tableau Agent** icon → Click **Got It** → Type: “Show me the returns by battery type” | Tableau Agent creates a viz summarizing return volume by battery type. |
+| He identifies the issue: 300Wh batteries. He recalls a recent supplier switch and flags the issue internally. | n/a | Business user to analyst handoff completed with actionable insights. |
 
-### Pulse ([jump to](/McKenzie/Analyze))
-* Render the Pulse metrics in 3 formats (BAN, Card, Default)
-* Custom styling
+---
 
-### Pulse API to get access to all Pulse data ([jump to](/McKenzie/Analyze))
-* Pulse data for custom rendering
-* Pulse AI generated summaries (when [upgraded to Premium](/McKenzie/product-catalog))
-* Pulse Enhanced Q&A to get answers with correlations between multiple metrics (Tableau Plus license needed)
+## Feature Highlights
 
-### Embedded Web Authoring ([jump to](/Mario/Analyze))
-* Ad-hoc analysis
-* Tableau Agent (Tableau Plus license needed)
+### 🔹 Embedded Dashboards ([jump to](/McKenzie/product-catalog))
+- Secure and personalized using User Attribute Functions.
+- Interactive filtering (e.g., select a bike to update visuals).
+- Built-in monetization triggers (e.g., Upgrade to Premium).
+
+### 🔹 Headless BI – VizQL Data Service
+- Access the data behind the dashboards via API.
+- Power custom visualizations (e.g., $ signs).
+- Enable interactive front-end elements using open-source libraries (e.g., sparklines).
+
+### 🔹 Pulse for Business Monitoring ([jump to](/McKenzie/Analyze))
+- Render metrics as BANs, cards, or default Pulse views.
+- Metrics styled to match app themes (including dark mode).
+- Uses Pulse API to fetch and display custom real-time metric data.
+- AI-generated insights from multiple metrics.
+
+### 🔹 Pulse Enhanced Q&A (Tableau Pluse license required)  
+- Ask natural language questions with correlation between KPIs (e.g., Sales vs. Returns).
+
+### 🔹 Embedded Web Authoring for Analysts ([jump to](/Mario/Analyze))
+- Live connection to governed data.
+- Drag-and-drop ad hoc analysis.
+- Boost productivity with **Tableau Agent**—a natural language assistant for building vizzes. (Tableau Plus license required)
