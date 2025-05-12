@@ -4,6 +4,7 @@ import { TableauViz } from '@tableau/embedding-api-react';
 import { ProductInfo } from '../productCatalog/ProductCatalog';
 import { useAuth } from '../auth/useAuth';
 import { server, site } from "../../constants/Constants";
+import { useAppContext } from '../../App';
 
 const EmbeddedDashboard: React.FC<{
   sheet: string,
@@ -14,6 +15,7 @@ const EmbeddedDashboard: React.FC<{
 
   const { getJwtFromServer } = useAuth()
   const [jwt, setJwt] = useState<string | null>(null);
+  const { userLicense } = useAppContext();
 
   useEffect(() => {
 
@@ -21,7 +23,7 @@ const EmbeddedDashboard: React.FC<{
       setJwt(await getJwtFromServer());
     })();
 
-  }, []);
+  }, [userLicense]);
 
   if (!jwt) {
 
