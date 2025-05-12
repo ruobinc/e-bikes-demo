@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import './DemoScript.css';
-import '@/assets/DemoScript.md';
+import markdownPath from '@/assets/DemoScript.txt';
 
 function DemoScript() {
   const [markdownContent, setMarkdownContent] = useState<string>('');
 
   useEffect(() => {
     async function fetchMarkdown() {
-      const response = await fetch('/src/assets/DemoScript.md');
+      const response = await fetch(markdownPath);
       const text = await response.text();
       setMarkdownContent(text);
     }
