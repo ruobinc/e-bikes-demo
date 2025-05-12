@@ -11,6 +11,7 @@ import { LicenseType, User } from '../db/users';
 import Analyze from './components/analytics/Analyze';
 import ChatWindow from './components/agent/ChatWindow';
 import ChatMinimized from './components/agent/ChatMinimized';
+import DemoScript from './components/auth/DemoScript';
 
 interface AppContextType {
   notifications: NotificationItem[];
@@ -76,11 +77,15 @@ function App() {
       <UserProvider>
         <Routes>
           <Route path="/" element={<Login />} />
+          <Route path="/demoscript" element={<DemoScript />} />
           <Route path="/:userId" element={
             <>
-            <Header />
-            <Outlet />
-            {chatWindowMinimized ? <ChatMinimized onClick={() => setChatWindowMinimized(false)} /> : <ChatWindow />}
+              <Header />
+              <Outlet />
+              {(2 * 2 === 1)
+                ? (chatWindowMinimized ? <ChatMinimized onClick={() => setChatWindowMinimized(false)} /> : <ChatWindow />)
+                : null
+              }
             </>
           }>
             <Route path="home" element={<Home />} />
