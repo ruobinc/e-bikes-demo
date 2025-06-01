@@ -8,12 +8,32 @@ import { get } from './get';
 import { post } from './post';
 import { getJwt } from './getJwt';
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 const port = (process.env.PORT && parseInt(process.env.PORT, 10)) || 5001;
 
 const root = path.join(__dirname, '../dist');
 
 const app = express();
-app.use('/', express.static(root)).use(cors()).use(bodyParser.json());
+
+// Add request logging middleware
+// app.use((req, res, next) => {
+//   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+//   console.log('Headers:', req.headers);
+//   if (req.body) console.log('Body:', req.body);
+//   next();
+// });
+
+app.use('/', express.static(root))
+   .use(cors())
+   .use(bodyParser.json());
+
+// Add error handling middleware
+app.use((err: any, req: any, res: any, next: any) => {
+  console.error('Error:', err);
+  res.status(500).send({ error: err.message });
+});
 
 app.get('/getJwt', getJwt);
 app.get('/api/:apiVersion/:apiPath*', get);
@@ -25,6 +45,8 @@ if (process.env.NODE_ENV !== 'test') {
   }
   
   ViteExpress.listen(app, port, () => {
+    console.log(`Server started at ${new Date().toISOString()}`);
+    console.log(`Environment: ${process.env.NODE_ENV}`);
     console.log(`Navigate to http://localhost:${port}`);
   });
 }

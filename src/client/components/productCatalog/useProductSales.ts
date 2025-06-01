@@ -1,8 +1,6 @@
-import { useAppContext } from '../../App'; // Adjust the import path as necessary
-
 import { Query } from '../../../server/hbi'
 import { useAuth } from '../auth/useAuth';
-import { server, site, datasourceLuid } from "../../constants/Constants";
+import { server, site, datasourceLuid, appServer } from "../../constants/Constants";
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { users } from '../../../db/users';
@@ -130,7 +128,7 @@ export function useProductSales() {
     };
 
     try {
-      const response = await fetch('/api/-/hbi-query', post);
+      const response = await fetch(`${appServer}/api/-/hbi-query`, post);
       const json = await response.json();
 
       return (json.data ?? []) as ProductSales[];

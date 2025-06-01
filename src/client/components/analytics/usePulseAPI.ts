@@ -1,5 +1,5 @@
 import { useAuth } from "../auth/useAuth";
-import { server, site, subscriber } from "../../constants/Constants";
+import { appServer, server, site, subscriber } from "../../constants/Constants";
 
 interface MetricDefinition {
   metric_id: string,
@@ -44,7 +44,7 @@ export function usePulseApi() {
   }[]> {
 
     const query = encodeURIComponent(`user_id=${subscriber}`);
-    const url = `/api/-/pulse/subscriptions?query=${query}`;
+    const url = `${appServer}/api/-/pulse/subscriptions?query=${query}`;
     const response = await fetch(url, {
       method: 'GET',
       headers: await getHeaders(),
@@ -75,7 +75,7 @@ export function usePulseApi() {
   }[]> {
 
     const query = encodeURIComponent(`enable_sorting=true&metric_ids=${metric_ids.join(',')}`);
-    const url = `/api/-/pulse/metrics:batchGet?query=${query}`;
+    const url = `${appServer}/api/-/pulse/metrics:batchGet?query=${query}`;
     const response = await fetch(url, {
       method: 'GET',
       headers: await getHeaders(),
@@ -103,7 +103,7 @@ export function usePulseApi() {
   async function getPulseEnhancedQAInsights(question: string): Promise<string> {
 
     const metricDefinitions = await getSubscribedMetricDefinitions();
-    const url = `/api/-/pulse/insights/brief`
+    const url = `${appServer}/api/-/pulse/insights/brief`
 
     const response = await fetch(url, {
       method: 'POST',
@@ -145,7 +145,7 @@ export function usePulseApi() {
     const definitions = await getDefinitions(subscriptions.map(subscription => subscription.metric_id));
 
     const query = encodeURIComponent(`definition_ids=${definitions.map(definition => definition.definition_id)}`);
-    const url = `/api/-/pulse/definitions:batchGet?query=${query}`;
+    const url = `${appServer}/api/-/pulse/definitions:batchGet?query=${query}`;
     const response = await fetch(url, {
       method: 'GET',
       headers: await getHeaders(),
@@ -187,7 +187,7 @@ export function usePulseApi() {
 
     const promises = metricDefinitions.map(async (metricDefinition) => {
 
-      const url = `/api/-/pulse/insights/ban`;
+      const url = `${appServer}/api/-/pulse/insights/ban`;
       const response = await fetch(url, {
         method: 'POST',
         headers: await getHeaders(),
@@ -238,7 +238,7 @@ export function usePulseApi() {
 
     const promises = metricDefinitions.map(async (metricDefinition) => {
 
-      const url = `/api/-/pulse/insights/springboard`;
+      const url = `${appServer}/api/-/pulse/insights/springboard`;
       const response = await fetch(url, {
         method: 'POST',
         headers: await getHeaders(),

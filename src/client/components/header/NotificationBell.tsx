@@ -5,7 +5,7 @@ import NotificationWindow from './NotificationWindow';
 import { NotificationItem } from './NotificationWindow';
 import { Query } from '../../../server/hbi'
 import { useAuth } from '../auth/useAuth';
-import { server, site, datasourceLuid } from "../../constants/Constants";
+import { server, site, datasourceLuid, appServer } from "../../constants/Constants";
 
 // Our HBI Query to get return percentages
 const query: Query = {
@@ -90,7 +90,7 @@ const NotificationBell: React.FC = () => {
         }
       }
 
-      const response = await fetch('/api/-/hbi-query', post);
+      const response = await fetch(`${appServer}/api/-/hbi-query`, post);
       const json = await response.json();
       const results = (json.data ?? []) as AccountReturns[];
 

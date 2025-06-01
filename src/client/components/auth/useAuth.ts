@@ -1,6 +1,7 @@
 import {  useParams } from 'react-router-dom';
 import { users } from '../../../db/users';
 import { useAppContext } from '../../App';
+import { appServer } from '../../constants/Constants';
 
 export function useAuth() {
     const { userId } = useParams<{ userId: string }>();
@@ -12,7 +13,7 @@ export function useAuth() {
             throw new Error('User is not defined');
         }
 
-        const url = `/getJwt?username=${user.username}&license=${userLicense}`
+        const url = `${appServer}/getJwt?username=${user.username}&license=${userLicense}`
         const response = await fetch(url);
         const json = await response.json();
         return json.jwt;
