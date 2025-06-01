@@ -1,6 +1,6 @@
 .pulsedefault {
     width: 800px;
-    height: calc(100vh - 140px);
+    height: 2000px;
     border-radius: 40px;
 }
 
@@ -11,5 +11,5 @@
 
 .pulseban {
     width: 420px;
-    height: 230px
+    height: 260px
 }
