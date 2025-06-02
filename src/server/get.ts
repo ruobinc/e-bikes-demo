@@ -21,6 +21,7 @@ export async function get(request: ExpressRequest, response: ExpressResponse) {
     }
 
     const { server, site, apiVersion, apiPath, query, jwt } = requestResult.val;
+    response.send({ error: `debug info: server = '${server}'` });
     let token = '';
     if (jwt) {
       const signinResult = await signinAsync({ server, apiVersion, site, jwt })
