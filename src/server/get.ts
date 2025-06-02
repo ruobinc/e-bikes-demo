@@ -4,7 +4,7 @@ import { Err, Ok, Result } from 'ts-results';
 import { signinAsync } from './signin';
 
 export type RequestData = {
-  server: string;
+  tableauServer: string;
   site: string;
   apiVersion: string;
   apiPath: string;
@@ -20,11 +20,10 @@ export async function get(request: ExpressRequest, response: ExpressResponse) {
       return;
     }
 
-    const { server, site, apiVersion, apiPath, query, jwt } = requestResult.val;
-    response.send({ error: `debug info: server = '${server}'` });
+    const { tableauServer, site, apiVersion, apiPath, query, jwt } = requestResult.val;
     let token = '';
     if (jwt) {
-      const signinResult = await signinAsync({ server, apiVersion, site, jwt })
+      const signinResult = await signinAsync({ tableauServer, apiVersion, site, jwt })
       if (signinResult.err) {
         response.status(400).send(signinResult.val);
         return;
@@ -42,7 +41,7 @@ export async function get(request: ExpressRequest, response: ExpressResponse) {
       headers['X-Tableau-Auth'] = token;
     }
 
-    const fetchResponse = await fetch(`https://${server}/api/${apiVersion}/${apiPath}?${query}`, {
+    const fetchResponse = await fetch(`https://${tableauServer}/api/${apiVersion}/${apiPath}?${query}`, {
       method: 'GET',
       headers,
     });
@@ -66,14 +65,14 @@ export async function get(request: ExpressRequest, response: ExpressResponse) {
 function validateRequest(request: ExpressRequest): Result<RequestData, void> {
   const params = request.params;
 
-  const server = request.header('server') ?? '';
+  const tableauServer = request.header('tableauServer') ?? '';
   const site = request.header('site') ?? '';
   const jwt = request.header('jwt') ?? '';
 
   const apiVersion = `${params.apiVersion || ''}`;
   const apiPath = `${params.apiPath || ''}${params[0] || ''}`;
   const query = `${request.query.query || ''}`;
-  if (!server || !apiVersion || !apiPath) {
+  if (!tableauServer || !apiVersion || !apiPath) {
     return Err.EMPTY;
   }
 
@@ -81,5 +80,5 @@ function validateRequest(request: ExpressRequest): Result<RequestData, void> {
     return Err.EMPTY;
   }
 
-  return new Ok({ server, apiVersion, site, apiPath, query, jwt });
+  return new Ok({ tableauServer, apiVersion, site, apiPath, query, jwt });
 }

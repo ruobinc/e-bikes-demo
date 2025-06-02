@@ -30,7 +30,7 @@ app.use('/', express.static(root))
    .use(bodyParser.json());
 
 // Add error handling middleware
-app.use((err: any, req: any, res: any, next: any) => {
+app.use((err: any, _req: any, res: any, _next: any) => {
   console.error('Error:', err);
   res.status(500).send({ error: err.message });
 });

@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { server } from "../client/constants/Constants";
+import { tableauServer } from "../client/constants/Constants";
 
 // Define interfaces for your query structure
 interface QueryColumn {
@@ -53,7 +53,7 @@ export async function callHBI(token: string, query: Query) {
             'X-Tableau-Auth': token,
         }
     }
-    const response = await fetch(`https://${server}/api/v1/vizql-data-service/query-datasource`, post);
+    const response = await fetch(`https://${tableauServer}/api/v1/vizql-data-service/query-datasource`, post);
     if (response.ok) {
         const jsonResponse = await response.json() as QueryOutput;
         return jsonResponse;

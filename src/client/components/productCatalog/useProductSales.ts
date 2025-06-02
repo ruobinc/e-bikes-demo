@@ -1,6 +1,6 @@
 import { Query } from '../../../server/hbi'
 import { useAuth } from '../auth/useAuth';
-import { server, site, datasourceLuid, appServer } from "../../constants/Constants";
+import { tableauServer, site, datasourceLuid, appServer } from "../../constants/Constants";
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { users } from '../../../db/users';
@@ -121,9 +121,9 @@ export function useProductSales() {
       body: JSON.stringify(query),
       headers: {
         'Content-Type': 'application/json',
-        server: server,
-        site: site,
-        jwt: jwt
+        tableauServer,
+        site,
+        jwt
       },
     };
 

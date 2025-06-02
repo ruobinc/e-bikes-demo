@@ -1,13 +1,13 @@
 import { Err, Ok, Result } from "ts-results";
 
 export type SignInParams = {
-  server: string;
+  tableauServer: string;
   apiVersion: string;
   jwt: string;
   site: string;
 }
 
-export async function signinAsync({ server, apiVersion, jwt, site }: SignInParams): Promise<Result<string, string>> {
+export async function signinAsync({ tableauServer, apiVersion, jwt, site }: SignInParams): Promise<Result<string, string>> {
   const body = {
     credentials: {
       jwt,
@@ -21,7 +21,7 @@ export async function signinAsync({ server, apiVersion, jwt, site }: SignInParam
     apiVersion = '3.21';
   }
 
-  const signinResponse = await fetch(`https://${server}/api/${apiVersion}/auth/signin`, {
+  const signinResponse = await fetch(`https://${tableauServer}/api/${apiVersion}/auth/signin`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -6,10 +6,9 @@ import hmacSHA256 from 'crypto-js/hmac-sha256';
 import WordArray from 'crypto-js/lib-typedarrays';
 import { v4 as uuidv4 } from 'uuid';
 import { User, users } from '../db/users';
-import { clientId, secretId, secretValue, username } from './Constants';
 
 export type RequestData = {
-  server: string;
+  tableauServer: string;
   site: string;
   apiVersion: string;
   apiPath: string;
@@ -73,15 +72,15 @@ export function createJwt(user: User, license: string) {
   const header = {
     alg: 'HS256',
     typ: 'JWT',
-    kid: secretId,
-    iss: clientId,
+    kid: process.env.VITE_SECRET_ID,
+    iss: process.env.VITE_CLIENT_ID,
   };
 
   const data = {
     jti: uuidv4(),
-    iss: clientId,
+    iss: process.env.VITE_CLIENT_ID,
     aud: 'tableau',
-    sub: username,
+    sub: process.env.VITE_USERNAME,
     scp: scopes,
     iat: Math.floor(Date.now() / 1000) - 5,
     exp: Math.floor(Date.now() / 1000) + 10 * 60,
@@ -93,7 +92,7 @@ export function createJwt(user: User, license: string) {
   const encodedData = base64url(Utf8.parse(JSON.stringify(data)));
 
   const token = `${encodedHeader}.${encodedData}`;
-  const signature = base64url(hmacSHA256(token, secretValue));
+  const signature = base64url(hmacSHA256(token, process.env.VITE_SECRET_VALUE!));
 
   return `${token}.${signature}`;
 }

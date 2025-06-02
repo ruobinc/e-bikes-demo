@@ -1,5 +1,5 @@
 import { useAuth } from "../auth/useAuth";
-import { appServer, server, site, subscriber } from "../../constants/Constants";
+import { appServer, tableauServer, site, subscriber } from "../../constants/Constants";
 
 interface MetricDefinition {
   metric_id: string,
@@ -32,8 +32,8 @@ export function usePulseApi() {
       'Content-Type': 'application/json',
       Accept: 'application/json',
       jwt: await getJwtFromServer(),
-      server: server,
-      site: site,
+      tableauServer,
+      site,
     } as HeadersInit;
 
   }
@@ -168,7 +168,7 @@ export function usePulseApi() {
           metric_id: definition.metric_id,
           definition_id: definition.definition_id,
           name: definition_response.metadata.name,
-          url: `https://${server}/pulse/site/${site}/metrics/${definition.metric_id}`,
+          url: `https://${tableauServer}/pulse/site/${site}/metrics/${definition.metric_id}`,
           metric_specification: definition.metric_specification,
           definition_specification: definition_response.specification,
           extension_options: definition_response.extension_options,

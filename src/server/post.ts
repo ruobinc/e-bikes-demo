@@ -5,7 +5,7 @@ import { signinAsync } from './signin';
 import { callHBI } from './hbi';
 
 export type RequestData = {
-  server: string;
+  tableauServer: string;
   site: string;
   apiVersion: string;
   apiPath: string;
@@ -21,10 +21,10 @@ export async function post(request: ExpressRequest, response: ExpressResponse) {
       return;
     }
 
-    const { server, site, apiVersion, apiPath, body, jwt } = requestResult.val;
+    const { tableauServer, site, apiVersion, apiPath, body, jwt } = requestResult.val;
     let token = '';
     if (jwt) {
-      const signinResult = await signinAsync({ server, apiVersion, site, jwt })
+      const signinResult = await signinAsync({ tableauServer, apiVersion, site, jwt })
       if (signinResult.err) {
         response.status(400).send(signinResult.val);
         return;
@@ -65,7 +65,7 @@ export async function post(request: ExpressRequest, response: ExpressResponse) {
       }
     }
 
-    const fetchResponse = await fetch(`https://${server}/api/${apiVersion}/${apiPath}`, init);
+    const fetchResponse = await fetch(`https://${tableauServer}/api/${apiVersion}/${apiPath}`, init);
 
     const raw = await fetchResponse.text();
     if (!raw) {
@@ -86,7 +86,7 @@ export async function post(request: ExpressRequest, response: ExpressResponse) {
 function validateRequest(request: ExpressRequest): Result<RequestData, void> {
   const params = request.params;
 
-  const server = request.header('server') ?? '';
+  const tableauServer = request.header('tableauServer') ?? '';
   const site = request.header('site') ?? '';
   const jwt = request.header('jwt') ?? '';
 
@@ -95,7 +95,7 @@ function validateRequest(request: ExpressRequest): Result<RequestData, void> {
 
   const bodyStr = `${JSON.stringify(request.body) || ''}`;
   const body = bodyStr === '{}' ? '' : bodyStr;
-  if (!server || !apiVersion || !apiPath) {
+  if (!tableauServer || !apiVersion || !apiPath) {
     return Err.EMPTY;
   }
 
@@ -103,5 +103,5 @@ function validateRequest(request: ExpressRequest): Result<RequestData, void> {
     return Err.EMPTY;
   }
 
-  return new Ok({ server, apiVersion, site, apiPath, body, jwt });
+  return new Ok({ tableauServer, apiVersion, site, apiPath, body, jwt });
 }
