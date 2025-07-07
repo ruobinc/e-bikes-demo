@@ -1,5 +1,5 @@
-import { useState, createContext, useContext, ReactNode, useEffect } from 'react';
-import { Routes, Route, Outlet, useLocation } from 'react-router-dom';
+import { useState, createContext, useContext, ReactNode } from 'react';
+import { Routes, Route, Outlet } from 'react-router-dom';
 import styles from './App.module.css';
 import Header from './components/header/Header';
 import Home from './components/home/Home';
@@ -9,8 +9,7 @@ import ProductCatalog from './components/productCatalog/ProductCatalog';
 import { NotificationItem } from './components/header/NotificationWindow';
 import { LicenseType, User } from '../db/users';
 import Analyze from './components/analytics/Analyze';
-import ChatWindow from './components/agent/ChatWindow';
-import ChatMinimized from './components/agent/ChatMinimized';
+import AIAssistent from './components/analytics/AIAssistent';
 import DemoScript from './components/auth/DemoScript';
 
 interface AppContextType {
@@ -20,13 +19,13 @@ interface AppContextType {
   updateUserLicense: (license: LicenseType) => void;
 }
 
-export type Pages = 'Home' | 'Product Catalog' | 'Performance' | 'Analyze';
+export type Pages = 'Home' | 'Product Catalog' | 'Performance' | 'Analyze' | 'AI Assistant';
 
 export const userPages = ((user: User): Pages[] => {
   if (user.isRetailer) {
-    return ['Home', 'Product Catalog', 'Analyze'];
+    return ['Home', 'Product Catalog', 'Analyze', 'AI Assistant'];
   } else {
-    return ['Home', 'Performance', 'Analyze'] as Pages[];
+    return ['Home', 'Performance', 'Analyze', 'AI Assistant'] as Pages[];
   }
 });
 
@@ -64,14 +63,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
 function App() {
 
-  const [chatWindowMinimized, setChatWindowMinimized] = useState<boolean>(true);
-  const location = useLocation();
-
-  // Set chatWindowMinimized to true whenever the URL changes
-  useEffect(() => {
-    setChatWindowMinimized(true);
-  }, [location]);
-
   return (
     <div className={styles.root}>
       <UserProvider>
@@ -82,17 +73,13 @@ function App() {
             <>
               <Header />
               <Outlet />
-              {(2 * 2 === 1)
-                ? (chatWindowMinimized ? <ChatMinimized onClick={() => setChatWindowMinimized(false)} /> : <ChatWindow />)
-                : null
-              }
             </>
           }>
             <Route path="home" element={<Home />} />
             <Route path="product-catalog" element={<ProductCatalog />} />
             <Route path="performance" element={<Performance />} />
-            <Route path="analyze" element={<Analyze />}
-            />
+            <Route path="analyze" element={<Analyze />} />
+                            <Route path="ai-assistant" element={<AIAssistent />} />
           </Route>
         </Routes>
       </UserProvider>

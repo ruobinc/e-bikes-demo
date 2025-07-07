@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
@@ -7,23 +10,13 @@ import ViteExpress from 'vite-express';
 import { get } from './get';
 import { post } from './post';
 import { getJwt } from './getJwt';
-
-import dotenv from 'dotenv';
-dotenv.config();
+import { mcpChat, mcpChatStream } from './mcp-chat';
 
 const port = (process.env.PORT && parseInt(process.env.PORT, 10)) || 5001;
 
 const root = path.join(__dirname, '../dist');
 
 const app = express();
-
-// Add request logging middleware
-// app.use((req, res, next) => {
-//   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-//   console.log('Headers:', req.headers);
-//   if (req.body) console.log('Body:', req.body);
-//   next();
-// });
 
 app.use('/', express.static(root))
    .use(cors())
@@ -36,6 +29,8 @@ app.use((err: any, _req: any, res: any, _next: any) => {
 });
 
 app.get('/getJwt', getJwt);
+app.post('/mcp-chat', mcpChat);
+app.post('/mcp-chat-stream', mcpChatStream);
 app.get('/api/:apiVersion/:apiPath*', get);
 app.post('/api/:apiVersion/:apiPath*', post);
 
