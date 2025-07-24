@@ -625,7 +625,7 @@ function AIAssistentDataVisuzliation({ toolResults, responseContent }: AIAssiste
       if (tableData && tableData.length > 1) {
         const chartConfig = detectChartType(tableData);
         if (chartConfig) {
-          chartConfig.title = `${result.tool}: ${chartConfig.title}`;
+          chartConfig.title = `${chartConfig.title}`;
           charts.push(chartConfig);
         }
       }
