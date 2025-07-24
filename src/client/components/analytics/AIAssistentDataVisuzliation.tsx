@@ -650,17 +650,6 @@ function AIAssistentDataVisuzliation({ toolResults, responseContent }: AIAssiste
 
   return (
     <div style={{ marginTop: '16px' }}>
-      <div style={{ 
-        fontSize: '14px', 
-        fontWeight: '600', 
-        color: '#28a745', 
-        marginBottom: '12px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '6px'
-      }}>
-        📊 Data Visualization
-      </div>
       
       {charts.map((chart, index) => (
         <div key={index} style={{ 
