@@ -57,8 +57,10 @@ This walkthrough showcases both Analyst capabilities (Mario) and Business User f
 - Ask natural language questions with correlation between KPIs (e.g., Sales vs. Returns).
 
 ### 🔹 Tableau MCP Server ([jump to](/McKenzie/ai-assistant))
-- Provide tools to LLMs to list data sources and query those
-- Enables conversational AI to ask data questions in natural language
+- Use the tools in the Tableau MCP server to enables conversational AI to ask data questions in natural language
+- Supports querying published data sources as well as Pulse
+- To see the published data sources in action, type: "Show me sales by year"
+- To see Pulse in action, type: "Show me the bikes sales KPI"
 
 ### 🔹 Embedded Web Authoring for Analysts ([jump to](/Mario/Analyze))
 - Live connection to governed data.
