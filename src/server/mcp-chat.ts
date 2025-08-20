@@ -4,7 +4,7 @@ import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { openaiApiKey } from './Constants';
 
-const MAX_MCP_ITERATIONS = 10;
+const MAX_MCP_ITERATIONS = 30;
 
 interface ChatMessage {
   role: 'user' | 'assistant' | 'system';
