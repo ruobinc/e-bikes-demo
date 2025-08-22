@@ -32,8 +32,14 @@
     font-size: 14px;
 }
 
-.clearButton {
+.headerControls {
+    display: flex;
+    flex-direction: column;
     margin-top: 10px;
+    gap: 10px;
+}
+
+.clearButton {
     padding: 6px 12px;
     background: #dc3545;
     color: white;
@@ -42,10 +48,41 @@
     cursor: pointer;
     font-size: 14px;
     transition: background-color 0.2s ease;
+    width: 150px
 }
 
 .clearButton:hover {
     background: #c82333;
+}
+
+.seededQuestions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.seededQuestionsLabel {
+    font-size: 14px;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.seededQuestionButton {
+    padding: 4px 8px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+    min-width: 32px;
+}
+
+.seededQuestionButton:hover {
+    background: #0056b3;
 }
 
 .chatContainer {
@@ -491,10 +528,30 @@
         font-size: 13px;
     }
 
+    .headerControls {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        margin-top: 8px;
+    }
+
     .clearButton {
         padding: 8px 12px;
         font-size: 13px;
-        margin-top: 8px;
+    }
+
+    .seededQuestions {
+        gap: 6px;
+    }
+
+    .seededQuestionsLabel {
+        font-size: 13px;
+    }
+
+    .seededQuestionButton {
+        padding: 4px 6px;
+        font-size: 11px;
+        min-width: 28px;
     }
 
     .messagesContainer {
@@ -645,10 +702,30 @@
         font-size: 12px;
     }
 
+    .headerControls {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+        margin-top: 6px;
+    }
+
     .clearButton {
         padding: 6px 10px;
         font-size: 12px;
-        margin-top: 6px;
+    }
+
+    .seededQuestions {
+        gap: 4px;
+    }
+
+    .seededQuestionsLabel {
+        font-size: 12px;
+    }
+
+    .seededQuestionButton {
+        padding: 3px 5px;
+        font-size: 10px;
+        min-width: 26px;
     }
 
     .messagesContainer {

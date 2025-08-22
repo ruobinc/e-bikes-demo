@@ -211,12 +211,12 @@ function AIAssistent() {
     }
   }, [progressUpdates]);
 
-  const sendMessage = async () => {
-    if (!currentQuery.trim() || isLoading) return;
+  const sendMessage = async (query: string) => {
+    if (!query.trim() || isLoading) return;
 
     const userMessage: ChatMessage = {
       role: 'user',
-      content: currentQuery.trim(),
+      content: query.trim(),
       timestamp: new Date(),
     };
 
@@ -330,7 +330,7 @@ function AIAssistent() {
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      sendMessage();
+      sendMessage(currentQuery);
     }
   };
 
@@ -338,6 +338,18 @@ function AIAssistent() {
     setMessages([]);
     setMessageToggles({});
     setError(null);
+  };
+
+  const handleSeededQuestion = (questionNumber: number) => {
+    const seededQuestions = {
+      1: "Show me the sales by year?",
+      2: "How is the bike sales KPI trending?",
+      3: "What data sources are available and what are the interesting fields in each data source?",
+      4: "Using the data source 'Incidents, Accidents, & Occupational Safety', can you write an analytical summary of the impact of weather and location on the number of accidents",
+    };
+    
+    const query = seededQuestions[questionNumber as keyof typeof seededQuestions] || '';
+    sendMessage(query);
   };
 
   const formatTimestamp = (date: Date) => {
@@ -532,17 +544,46 @@ function AIAssistent() {
     <div className={styles.root}>
       <div className={styles.header}>
         <h1 className={styles.title}>Tableau AI Assistant</h1>
+        <div className={styles.headerControls}>
         <p className={styles.subtitle}>
           Ask questions about your data, dashboards, and analytics. Powered by Tableau's MCP.
         </p>
+          <div className={styles.seededQuestions}>
+            <span className={styles.seededQuestionsLabel}>Seeded questions:</span>
+            <button
+              onClick={() => handleSeededQuestion(1)}
+              className={styles.seededQuestionButton}
+            >
+              Data Question
+            </button>
+            <button
+              onClick={() => handleSeededQuestion(2)}
+              className={styles.seededQuestionButton}
+            >
+              Pulse
+            </button>
+            <button
+              onClick={() => handleSeededQuestion(3)}
+              className={styles.seededQuestionButton}
+            >
+              Datasource Info
+            </button>
+            <button
+              onClick={() => handleSeededQuestion(4)}
+              className={styles.seededQuestionButton}
+            >
+              Summary using different data source
+            </button>
+        </div>
         {messages.length > 0 && (
-          <button
-            onClick={clearChat}
-            className={styles.clearButton}
-          >
-            Clear Chat
-          </button>
-        )}
+            <button
+              onClick={clearChat}
+              className={styles.clearButton}
+            >
+              Clear Chat
+            </button>
+          )}
+        </div>
       </div>
 
       <div className={styles.chatContainer}>
@@ -560,7 +601,6 @@ function AIAssistent() {
               {messages.map((message, index) => {
                 const currentToggles = messageToggles[index] || { showTools: false, showCharts: false };
                 const hasVegaSpecs = message.role === 'assistant' && hasVegaLiteSpecs(message);
-                const shouldShowCharts = currentToggles.showCharts || hasVegaSpecs;
                 
                 return (
                   <div
@@ -675,7 +715,7 @@ function AIAssistent() {
           />
           <button
             className={styles.sendButton}
-            onClick={sendMessage}
+            onClick={() => sendMessage(currentQuery)}
             disabled={!currentQuery.trim() || isLoading}
           >
             {isLoading ? 'Sending...' : 'Send'}
