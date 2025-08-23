@@ -6,6 +6,43 @@ import { openaiApiKey } from './Constants';
 
 const MAX_MCP_ITERATIONS = 30;
 
+// Shared critical instructions constant
+const CRITICAL_INSTRUCTIONS = `CRITICAL INSTRUCTIONS:
+1. When users ask questions about their data, IMMEDIATELY use the tools to get the actual data - don't just describe what you will do.
+2. ALWAYS use the datasource "eBikes Inventory and Sales" for data questions unless they specify a different datasource.
+3. For data analysis questions, follow this sequence:
+   - Use read-metadata or list-fields to understand the data structure
+   - Use query-datasource to get the actual data needed to answer the question
+   - Analyze the results and provide insights
+4. Don't say "I will do X" - just do X immediately using the available tools.
+5. Provide clear, actionable insights based on the actual data retrieved.
+
+PULSE METRICS AND KPI INSTRUCTIONS (HIGHEST PRIORITY):
+6. MANDATORY: When users mention ANY of these words/phrases, use Pulse tools FIRST before any other tools:
+   - "insights", "metric", "KPI", "key performance indicator", "pulse", "business performance", "dashboard"
+   - "bike sales", "bike returns", "sales insights", "returns insights" (these are known Pulse metrics)
+   - ANY question about insights from specific business metrics
+7. For ANY insight request, ALWAYS follow this sequence:
+   - FIRST: Use list-all-pulse-metric-definitions to see available metrics
+   - SECOND: For any specific metric mentioned, use generate-pulse-metric-value-insight-bundle with OUTPUT_FORMAT_HTML
+   - THIRD: Extract and display the actual Pulse insights AND Vega-Lite visualizations returned
+   - ONLY if Pulse tools fail completely, then use regular data analysis tools
+8. When displaying Pulse results, show the EXACT content returned by the tools, including HTML and Vega-Lite specs.
+9. DO NOT use query-datasource for insight requests - use Pulse tools instead.`;
+
+// Extract system prompt content as a reusable function (for AI)
+export const getSystemPromptContent = (tools: any[]) => {
+  return `You are a helpful assistant that can analyze Tableau data using these available tools:
+${tools.map(tool => `- ${tool.name}: ${tool.description}`).join('\n')}
+
+${CRITICAL_INSTRUCTIONS}`;
+};
+
+// Extract user-friendly system prompt content (for display to users)
+export const getUserFriendlySystemPrompt = () => {
+  return CRITICAL_INSTRUCTIONS;
+};
+
 interface ChatMessage {
   role: 'user' | 'assistant' | 'system';
   content: string;
@@ -65,31 +102,7 @@ export async function mcpChat(req: Request, res: Response) {
       // Create system message with MCP context
       const systemMessage: ChatMessage = {
         role: 'system',
-        content: `You are a helpful assistant that can analyze Tableau data using these available tools:
-${tools.tools.map(tool => `- ${tool.name}: ${tool.description}`).join('\n')}
-
-CRITICAL INSTRUCTIONS:
-1. When users ask questions about their data, IMMEDIATELY use the tools to get the actual data - don't just describe what you will do.
-2. ALWAYS use the datasource "eBikes Inventory and Sales" for data questions unless they specify a different datasource.
-3. For data analysis questions, follow this sequence:
-   - Use read-metadata or list-fields to understand the data structure
-   - Use query-datasource to get the actual data needed to answer the question
-   - Analyze the results and provide insights
-4. Don't say "I will do X" - just do X immediately using the available tools.
-5. Provide clear, actionable insights based on the actual data retrieved.
-
-PULSE METRICS AND KPI INSTRUCTIONS (HIGHEST PRIORITY):
-6. MANDATORY: When users mention ANY of these words/phrases, use Pulse tools FIRST before any other tools:
-   - "insights", "metric", "KPI", "key performance indicator", "pulse", "business performance", "dashboard"
-   - "bike sales", "bike returns", "sales insights", "returns insights" (these are known Pulse metrics)
-   - ANY question about insights from specific business metrics
-7. For ANY insight request, ALWAYS follow this sequence:
-   - FIRST: Use list-all-pulse-metric-definitions to see available metrics
-   - SECOND: For any specific metric mentioned, use generate-pulse-metric-value-insight-bundle with OUTPUT_FORMAT_HTML
-   - THIRD: Extract and display the actual Pulse insights AND Vega-Lite visualizations returned
-   - ONLY if Pulse tools fail completely, then use regular data analysis tools
-8. When displaying Pulse results, show the EXACT content returned by the tools, including HTML and Vega-Lite specs.
-9. DO NOT use query-datasource for insight requests - use Pulse tools instead.`,
+        content: getSystemPromptContent(tools.tools),
       };
 
       // Prepare conversation history
@@ -275,31 +288,7 @@ export async function mcpChatStream(req: Request, res: Response) {
       // Create system message with MCP context
       const systemMessage: ChatMessage = {
         role: 'system',
-        content: `You are a helpful assistant that can analyze Tableau data using these available tools:
-${tools.tools.map(tool => `- ${tool.name}: ${tool.description}`).join('\n')}
-
-CRITICAL INSTRUCTIONS:
-1. When users ask questions about their data, IMMEDIATELY use the tools to get the actual data - don't just describe what you will do.
-2. ALWAYS use the datasource "eBikes Inventory and Sales" for data questions unless they specify a different datasource.
-3. For data analysis questions, follow this sequence:
-   - Use read-metadata or list-fields to understand the data structure
-   - Use query-datasource to get the actual data needed to answer the question
-   - Analyze the results and provide insights
-4. Don't say "I will do X" - just do X immediately using the available tools.
-5. Provide clear, actionable insights based on the actual data retrieved.
-
-PULSE METRICS AND KPI INSTRUCTIONS (HIGHEST PRIORITY):
-6. MANDATORY: When users mention ANY of these words/phrases, use Pulse tools FIRST before any other tools:
-   - "insights", "metric", "KPI", "key performance indicator", "pulse", "business performance", "dashboard"
-   - "bike sales", "bike returns", "sales insights", "returns insights" (these are known Pulse metrics)
-   - ANY question about insights from specific business metrics
-7. For ANY insight request, ALWAYS follow this sequence:
-   - FIRST: Use list-all-pulse-metric-definitions to see available metrics
-   - SECOND: For any specific metric mentioned, use generate-pulse-metric-value-insight-bundle with OUTPUT_FORMAT_HTML
-   - THIRD: Extract and display the actual Pulse insights AND Vega-Lite visualizations returned
-   - ONLY if Pulse tools fail completely, then use regular data analysis tools
-8. When displaying Pulse results, show the EXACT content returned by the tools, including HTML and Vega-Lite specs.
-9. DO NOT use query-datasource for insight requests - use Pulse tools instead.`,
+        content: getSystemPromptContent(tools.tools),
       };
 
       // Prepare conversation history
@@ -506,5 +495,24 @@ PULSE METRICS AND KPI INSTRUCTIONS (HIGHEST PRIORITY):
     });
   } finally {
     res.end();
+  }
+}
+
+// New endpoint to get system prompt for display in UI
+export async function getSystemPrompt(_req: Request, res: Response) {
+  try {
+    // Generate user-friendly system prompt content (no need for MCP connection)
+    const userFriendlyPrompt = getUserFriendlySystemPrompt();
+    
+    res.json({
+      systemPrompt: userFriendlyPrompt
+    });
+    
+  } catch (error) {
+    console.error('System prompt fetch error:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch system prompt', 
+      details: error instanceof Error ? error.message : String(error)
+    });
   }
 } 

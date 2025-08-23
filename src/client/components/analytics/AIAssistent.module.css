@@ -26,10 +26,39 @@
     font-weight: 600;
 }
 
+.headerTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .subtitle {
     margin: 5px 0 0 0;
     color: #6c757d;
     font-size: 14px;
+}
+
+.infoButton {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: transparent;
+    color: #6c757d;
+    border: 1px solid #e9ecef;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    opacity: 0.6;
+}
+
+.infoButton:hover {
+    background: #f8f9fa;
+    color: #495057;
+    opacity: 1;
+    border-color: #dee2e6;
 }
 
 .headerControls {
@@ -793,5 +822,142 @@
 
     .emptyStateSubtext {
         font-size: 12px;
+    }
+}
+
+/* Modal Styles */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.modalContent {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    max-width: 800px;
+    max-height: 80vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #e9ecef;
+    background: #f8f9fa;
+}
+
+.modalHeader h2 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.modalCloseButton {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.modalCloseButton:hover {
+    background: #e9ecef;
+    color: #495057;
+}
+
+.modalBody {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
+}
+
+.systemPromptText {
+    font-family: 'SF Mono', 'Monaco', 'Cascadia Code', 'Consolas', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #495057;
+    background: #f8f9fa;
+    margin: 0;
+    padding: 20px;
+    white-space: pre-wrap;
+    overflow-x: auto;
+}
+
+/* Mobile Modal Styles */
+@media (max-width: 768px) {
+    .modalOverlay {
+        padding: 10px;
+    }
+    
+    .modalContent {
+        max-height: 90vh;
+    }
+    
+    .modalHeader {
+        padding: 15px;
+    }
+    
+    .modalHeader h2 {
+        font-size: 18px;
+    }
+    
+    .systemPromptText {
+        font-size: 12px;
+        padding: 15px;
+    }
+    
+    .infoButton {
+        width: 22px;
+        height: 22px;
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 480px) {
+    .modalOverlay {
+        padding: 5px;
+    }
+    
+    .modalHeader {
+        padding: 12px;
+    }
+    
+    .modalHeader h2 {
+        font-size: 16px;
+    }
+    
+    .systemPromptText {
+        font-size: 11px;
+        padding: 12px;
+    }
+    
+    .infoButton {
+        width: 20px;
+        height: 20px;
+        font-size: 10px;
     }
 } 

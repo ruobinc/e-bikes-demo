@@ -160,6 +160,8 @@ function AIAssistent() {
   const [showProgress, setShowProgress] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [progressUpdates, setProgressUpdates] = useState<ProgressUpdate[]>([]);
+  const [showSystemPrompt, setShowSystemPrompt] = useState<boolean>(false);
+  const [systemPromptContent, setSystemPromptContent] = useState<string>('');
   
   // Toggle states per message - using message index as key
   const [messageToggles, setMessageToggles] = useState<{ [messageIndex: number]: MessageToggles }>({});
@@ -350,6 +352,36 @@ function AIAssistent() {
     
     const query = seededQuestions[questionNumber as keyof typeof seededQuestions] || '';
     sendMessage(query);
+  };
+
+  const fetchSystemPrompt = async () => {
+    if (systemPromptContent) {
+      // Already fetched, just show the modal
+      setShowSystemPrompt(true);
+      return;
+    }
+    
+    try {
+      const response = await fetch('/system-prompt');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setSystemPromptContent(data.systemPrompt);
+      setShowSystemPrompt(true);
+    } catch (error) {
+      console.error('Failed to fetch system prompt:', error);
+      setSystemPromptContent('Failed to load system prompt. Please try again.');
+      setShowSystemPrompt(true);
+    }
+  };
+
+  const toggleSystemPrompt = () => {
+    if (showSystemPrompt) {
+      setShowSystemPrompt(false);
+    } else {
+      fetchSystemPrompt();
+    }
   };
 
   const formatTimestamp = (date: Date) => {
@@ -543,7 +575,16 @@ function AIAssistent() {
   return (
     <div className={styles.root}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Tableau AI Assistant</h1>
+        <div className={styles.headerTop}>
+          <h1 className={styles.title}>Tableau AI Assistant</h1>
+          <button 
+            className={styles.infoButton}
+            onClick={toggleSystemPrompt}
+            title="View System Instructions"
+          >
+            ?
+          </button>
+        </div>
         <div className={styles.headerControls}>
         <p className={styles.subtitle}>
           Ask questions about your data, dashboards, and analytics. Powered by Tableau's MCP.
@@ -722,6 +763,28 @@ function AIAssistent() {
           </button>
         </div>
       </div>
+
+      {/* System Prompt Popup */}
+      {showSystemPrompt && (
+        <div className={styles.modalOverlay} onClick={toggleSystemPrompt}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h2>System Instructions</h2>
+              <button 
+                className={styles.modalCloseButton}
+                onClick={toggleSystemPrompt}
+              >
+                ×
+              </button>
+            </div>
+            <div className={styles.modalBody}>
+              <pre className={styles.systemPromptText}>
+                {systemPromptContent}
+              </pre>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
