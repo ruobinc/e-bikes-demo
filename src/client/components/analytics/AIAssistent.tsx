@@ -344,7 +344,7 @@ function AIAssistent() {
 
   const handleSeededQuestion = (questionNumber: number) => {
     const seededQuestions = {
-      1: "Show me the sales by year?",
+      1: "Show me the sales by order date (yearly)?",
       2: "How is the bike sales KPI trending?",
       3: "What data sources are available and what are the interesting fields in each data source?",
       4: "Using the data source 'Incidents, Accidents, & Occupational Safety', can you write an analytical summary of the impact of weather and location on the number of accidents",
