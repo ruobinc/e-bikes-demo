@@ -49,13 +49,13 @@ function Pulse() {
           <div className={styles.pulseItems}>
             <PulseStandard jwt={jwt} theme={theme} banInsights={banInsights} />
           </div>
-          <div className={styles.pulseCustomItems}>
+          {/* <div className={styles.pulseCustomItems}>
             <button onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
               {theme === "light" ? "🌙 Dark Mode" : "☀️ Light Mode"}
             </button>
             <PulseEnhancedQA jwt={jwt} theme = {theme}/>
             <PulseCustom banInsights={banInsights} />
-          </div>
+          </div> */}
         </div>
       </div>
     )
