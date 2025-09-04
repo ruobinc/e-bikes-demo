@@ -14,7 +14,7 @@ const PulseStandard: React.FC<{
 
   } else {
 
-    const pulseUrl = (banInsights && banInsights[1].metricDefinition.url) ?? '';
+    const pulseUrl = (banInsights && banInsights[0]?.metricDefinition?.url) ?? '';
 
     return (
       <>
