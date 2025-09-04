@@ -10,8 +10,8 @@ function Home() {
         </video>
         <div className={styles.heroDynamo}>
           <h1 className={styles.title}>DYNAMO X2</h1>
-          <h2 className={styles.subtitle}>CONQUER THE IMPOSSIBLE</h2>
-          <div className={styles.action}>EXPLORE MORE</div>
+          <h2 className={styles.subtitle}>不可能を克服する</h2>
+          <div className={styles.action}>詳細へ</div>
         </div>
       </div>
       <div>

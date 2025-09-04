@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styles from './Header.module.css'
-import { useAppContext, userPages } from '../../App';
+import { useAppContext, userPages, Pages } from '../../App';
 import NotificationBell from './NotificationBell';
 import { users } from '../../../db/users';
 import { useMobile } from '../../hooks/useMobile';
@@ -13,6 +13,15 @@ const Header: React.FC = () => {
 
   const navigate = useNavigate();
     const { userLicense } = useAppContext();
+
+  // 日本語表示マッピング
+  const pageNameMapping: Record<Pages, string> = {
+    'Home': 'ホーム',
+    'Product Catalog': '商品カタログ',
+    'Performance': 'パフォーマンス',
+    'Analyze': 'メトリクス',
+    'AI Assistant': 'AIアシスタント'
+  };
 
   if (!user) {
     return null;
@@ -38,7 +47,7 @@ const Header: React.FC = () => {
                     onClick={() => handlePageChange(page)}
                     className={styles.navItem}
                   >
-                    {page}
+                    {pageNameMapping[page]}
                   </li>
                 )
               })}

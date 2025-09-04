@@ -44,8 +44,8 @@ const EmbeddedDashboardUpsellable: React.FC<{ selectedProduct: ProductInfo | nul
     <div className={styles.root}>
       {userLicense === 'Basic' && 
         <div className={styles.upsellMessage}>
-          <p>You have access to basic operational data. </p>
-          <p><a href='#' onClick={upgradeUserLicense}>Upgrade to premium</a> for $9.99 /month.</p>
+          <p>最低限なデータにアクセスできます。</p>
+          <p>$9.99 /月<a href='#' onClick={upgradeUserLicense}>プレミアムにアップグレード</a>できる。</p>
         </div>
       }
       {
