@@ -5,5 +5,3 @@ export const secretValue = process.env.VITE_SECRET_VALUE!;
 
 // OpenAI and Tableau MCP Configuration
 export const openaiApiKey = process.env.OPENAI_API_KEY!;
-export const tableauPATName = process.env.TABLEAU_PAT_NAME || 'MCP';
-export const tableauPATValue = process.env.TABLEAU_PAT_VALUE!;

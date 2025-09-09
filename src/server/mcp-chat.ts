@@ -1,34 +1,53 @@
 import { Request, Response } from 'express';
 import OpenAI from 'openai';
-import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
+// import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
+import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
-import { openaiApiKey } from './Constants';
+import { openaiApiKey} from './Constants';
 
 const MAX_MCP_ITERATIONS = 30;
 
 // Shared critical instructions constant
-const CRITICAL_INSTRUCTIONS = `CRITICAL INSTRUCTIONS:
-1. When users ask questions about their data, IMMEDIATELY use the tools to get the actual data - don't just describe what you will do.
-2. ALWAYS use the datasource "eBikes Inventory and Sales" for data questions unless they specify a different datasource.
-3. For data analysis questions, follow this sequence:
-   - Use read-metadata or list-fields to understand the data structure
-   - Use query-datasource to get the actual data needed to answer the question
-   - Analyze the results and provide insights
-4. Don't say "I will do X" - just do X immediately using the available tools.
-5. Provide clear, actionable insights based on the actual data retrieved.
+const CRITICAL_INSTRUCTIONS = `# Role and Objective
+- Respond directly to user data queries by executing actions with the appropriate tools, prioritizing actionable, data-driven insights.
+- Begin with a concise checklist (3-7 bullets) of your planned approach before executing substantive steps.
 
-PULSE METRICS AND KPI INSTRUCTIONS (HIGHEST PRIORITY):
-6. MANDATORY: When users mention ANY of these words/phrases, use Pulse tools FIRST before any other tools:
-   - "insights", "metric", "KPI", "key performance indicator", "pulse", "business performance", "dashboard"
-   - "bike sales", "bike returns", "sales insights", "returns insights" (these are known Pulse metrics)
-   - ANY question about insights from specific business metrics
-7. For ANY insight request, ALWAYS follow this sequence:
-   - FIRST: Use list-all-pulse-metric-definitions to see available metrics
-   - SECOND: For any specific metric mentioned, use generate-pulse-metric-value-insight-bundle with OUTPUT_FORMAT_HTML
-   - THIRD: Extract and display the actual Pulse insights AND Vega-Lite visualizations returned
-   - ONLY if Pulse tools fail completely, then use regular data analysis tools
-8. When displaying Pulse results, show the EXACT content returned by the tools, including HTML and Vega-Lite specs.
-9. DO NOT use query-datasource for insight requests - use Pulse tools instead.`;
+# Instructions
+- For data-related questions, immediately fetch data using the tools—do not explain or preview your intent.
+- Default to the "eBikes Inventory and Sales" datasource for analysis unless the user specifies otherwise.
+- Distinguish between insight/KPI requests and general data analysis as described below.
+
+## Data Analysis (Non-Insight) Workflow
+1. Use 'read-metadata' or 'list-fields' to understand the data structure.
+2. Fetch required data using 'query-datasource'.
+3. Analyze data and deliver clear, actionable insights based on the actual results.
+4. Refrain from narrating your intended actions; execute steps directly.
+5. When reporting on data, use the "Order Placed Date" field unless tool output mandates using the "date" field.
+6. After each tool call or code edit, validate the result with a brief check and proceed or self-correct if validation fails.
+
+## Pulse Metrics and KPI Workflow (Top Priority)
+- If the question contains any of the following (trigger Pulse tools FIRST):
+  - "insights", "metric", "KPI", "key performance indicator", "pulse", "business performance", "dashboard"
+  - "bike sales", "bike returns", "sales insights", "returns insights"
+  - Any query seeking insights from specific business metrics
+- Pulse insight request steps:
+  1. Use 'list-all-pulse-metric-definitions' to retrieve available metrics.
+  2. For referenced metrics, use 'generate-pulse-metric-value-insight-bundle' with 'OUTPUT_FORMAT_HTML'.
+  3. Present the exact Pulse insight output and any accompanying Vega-Lite visualizations.
+  4. Resort to regular data analysis tools only if ALL Pulse tools fail; then follow the Data Analysis Workflow.
+- Display Pulse results exactly as returned, including HTML or Vega-Lite specs. If a Pulse tool returns a 'date' field, use it as provided.
+- Never use 'query-datasource' for insights; use Pulse tools unless they fail.
+
+# Output Format
+- Present actionable insights, required visualizations, and any tool-generated HTML in the output, matching the formats as supplied by the tools.
+
+# Verbosity
+- Summaries for data analysis should be concise and actionable. For code and specifications, use high verbosity, with comments and clear structure as appropriate.
+
+# Stop Conditions
+- Consider the request fulfilled once actionable, well-supported insights have been delivered following the specified workflow. Escalate or notify only if data/tool access issues prevent completion.
+
+`;
 
 // Extract system prompt content as a reusable function (for AI)
 export const getSystemPromptContent = (tools: any[]) => {
@@ -53,11 +72,25 @@ interface ChatRequest {
   query: string;
 }
 
-// Create MCP client connection  
 async function createMCPClient() {
-  const serverUrl = 'https://tableau-mcp-proto-d14b2e55a4f4.herokuapp.com/tableau-mcp';
-
-  const transport = new StreamableHTTPClientTransport(new URL(serverUrl));
+  // Create stdio transport directly
+  const transport = new StdioClientTransport({
+    command: 'node',
+    args: [process.env.TABLEAU_MCP_PATH!],
+    env: {
+      ...process.env,
+      SERVER: 'https://' + process.env.VITE_SERVER!,
+      SITE_NAME: process.env.VITE_SITE!,
+      // PAT_NAME: process.env.TABLEAU_PAT_NAME!,
+      // PAT_VALUE: process.env.TABLEAU_PAT_VALUE!,
+      AUTH: 'direct-trust',
+      JWT_SUB_CLAIM: process.env.VITE_USERNAME!,
+      CONNECTED_APP_CLIENT_ID: process.env.VITE_CLIENT_ID!,
+      CONNECTED_APP_SECRET_ID: process.env.VITE_SECRET_ID!,
+      CONNECTED_APP_SECRET_VALUE: process.env.VITE_SECRET_VALUE!,
+      DEFAULT_LOG_LEVEL: 'debug',
+    },
+  });
 
   const client = new Client({
     name: "tableau-chat-client",
@@ -125,8 +158,9 @@ export async function mcpChat(req: Request, res: Response) {
 
         // Call OpenAI with tools
         const completion = await openai.chat.completions.create({
-          model: 'gpt-4o-mini',
+          model: 'gpt-5-nano',
           messages: currentMessages,
+          temperature: 0.2,
           tools: openaiTools,
           tool_choice: 'auto',
         });
@@ -199,7 +233,7 @@ export async function mcpChat(req: Request, res: Response) {
       if (iteration >= MAX_MCP_ITERATIONS && !finalResponse) {
         console.log('Max iterations reached, getting final response');
         const finalCompletion = await openai.chat.completions.create({
-          model: 'gpt-4o-mini',
+          model: 'gpt-5-nano',
           messages: currentMessages,
         });
         finalResponse = finalCompletion.choices[0].message.content || '';
@@ -325,7 +359,7 @@ export async function mcpChatStream(req: Request, res: Response) {
 
         // Call OpenAI with tools
         const completion = await openai.chat.completions.create({
-          model: 'gpt-4o-mini',
+          model: 'gpt-5-nano',
           messages: currentMessages,
           tools: openaiTools,
           tool_choice: 'auto',
@@ -465,7 +499,7 @@ export async function mcpChatStream(req: Request, res: Response) {
         });
         
         const finalCompletion = await openai.chat.completions.create({
-          model: 'gpt-4o-mini',
+          model: 'gpt-5-nano',
           messages: currentMessages,
         });
         finalResponse = finalCompletion.choices[0].message.content || '';
