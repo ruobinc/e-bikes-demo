@@ -43,7 +43,7 @@ const Sparkline: React.FC<SparklineProps> = ({ salesData, isLoading }) => {
               <Line type="monotone" dataKey="sales" stroke="#8884d8" strokeWidth={2} dot={false} />
             </LineChart>
           </ResponsiveContainer>
-          <div style={{ fontSize: '14px', fontWeight: 'normal' }}>30日売上</div>
+          <div style={{ fontSize: '14px', fontWeight: 'normal' }}>直近30日間売上</div>
 
         </div>
 
@@ -62,7 +62,7 @@ const Sparkline: React.FC<SparklineProps> = ({ salesData, isLoading }) => {
               <Bar dataKey="returns" fill="yellow" barSize={10} />
             </ComposedChart>
           </ResponsiveContainer>
-          <div style={{ fontSize: '14px', fontWeight: 'normal' }}>30日返品</div>
+          <div style={{ fontSize: '14px', fontWeight: 'normal' }}>直近30日間返品</div>
 
         </div>
       </div>
