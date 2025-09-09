@@ -14,14 +14,16 @@ function Login() {
 
   // Filter users based on device type
   const availableUsers = isMobile 
-    ? users.filter(user => user.username === 'McKenzie')  // Only McKenzie on mobile
+    ? users.filter(user => user.username === 'Yamada')  // Only McKenzie on mobile
+    // ? users.filter(user => user.username === 'McKenzie')  // Only McKenzie on mobile
     : users;  // All users on desktop
 
   const handleUserLogin = (user: any) => {
     updateUserLicense(user.license);
     
     // On mobile, redirect McKenzie directly to AI Assistant
-    if (isMobile && user.username === 'McKenzie') {
+    // if (isMobile && user.username === 'McKenzie') {
+    if (isMobile && user.username === 'Yamada') {
       navigate(`${user.username}/ai-assistant`);
     } else {
       // On desktop, redirect to Home as usual
@@ -42,7 +44,7 @@ function Login() {
       }
 
       {/* Only show resources footer on desktop */}
-      {!isMobile && (
+      {/* {!isMobile && (
         <div className={styles.footer}>
           <h3>Resources</h3>
           <ul>
@@ -71,7 +73,7 @@ function Login() {
             </li>
           </ul>
         </div>
-      )}
+      )} */}
 
     </div>
   )

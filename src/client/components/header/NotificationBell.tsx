@@ -109,8 +109,8 @@ const NotificationBell: React.FC = () => {
           const returnPercentage = account.returnPercentage.toLocaleString('en-US', { style: 'percent', minimumFractionDigits: 2 });
 
           return {
-            title: `High returns: ${account.accountName}`,
-            message: `${returnPercentage} of the product ${account.productName} was returned in the last month.`
+            title: `返品率警告: ${account.accountName}`,
+            message: `商品${account.productName}の返品率が${returnPercentage}となっています（過去1ヶ月）。`
           } as NotificationItem;
         });
 

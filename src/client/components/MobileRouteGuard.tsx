@@ -14,7 +14,8 @@ const MobileRouteGuard = ({ children }: MobileRouteGuardProps) => {
 
   useEffect(() => {
     // Only redirect on mobile and if the user is McKenzie
-    if (isMobile && userId === 'McKenzie') {
+    // if (isMobile && userId === 'McKenzie') {
+    if (isMobile && userId === 'Yamada') {
       const currentPath = location.pathname.toLowerCase();
       
       // If not on AI Assistant page, redirect to it

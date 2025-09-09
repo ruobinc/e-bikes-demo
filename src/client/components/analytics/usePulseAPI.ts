@@ -247,6 +247,8 @@ export function usePulseApi() {
             version: '1',
             options: {
               output_format: 'OUTPUT_FORMAT_TEXT',
+              language: 'LANGUAGE_JA_JP',
+              locale: 'LOCALE_JA_JP',
             },
             input: {
               metadata: {

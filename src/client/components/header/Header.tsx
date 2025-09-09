@@ -19,7 +19,7 @@ const Header: React.FC = () => {
     'Home': 'ホーム',
     'Product Catalog': '商品カタログ',
     'Performance': 'パフォーマンス',
-    'Analyze': 'メトリクス',
+    'Analyze': '分析',
     'AI Assistant': 'AIアシスタント'
   };
 

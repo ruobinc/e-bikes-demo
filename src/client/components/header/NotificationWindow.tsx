@@ -45,7 +45,7 @@ const NotificationWindow: React.FC<{ notifications: NotificationItem[], onClose:
                         <div className={styles.title}>{notification.title}</div>
                         <div className={styles.message}>{notification.message}</div>
                         <div className={styles.actions}>
-                            <a className={styles.analyze} onClick={analyze}>Analyze</a>
+                            <a className={styles.analyze} onClick={analyze}>分析</a>
                         </div>
                     </div>
                 ))

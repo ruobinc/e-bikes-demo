@@ -344,11 +344,18 @@ function AIAssistent() {
 
   const handleSeededQuestion = (questionNumber: number) => {
     const seededQuestions = {
-      1: "Show me the sales by year?",
-      2: "How is the bike sales KPI trending?",
-      3: "What data sources are available and what are the interesting fields in each data source?",
+      1: "2023年から2025年までの売上を教えて",
+      2: "ebikeの売上KPIの推移はどうですか？",
+      3: "利用可能なデータソースと、各データソースの興味深いフィルドは何ですか?",
       4: "Using the data source 'Incidents, Accidents, & Occupational Safety', can you write an analytical summary of the impact of weather and location on the number of accidents",
     };
+  // const handleSeededQuestion = (questionNumber: number) => {
+  //   const seededQuestions = {
+  //     1: "Show me the sales by year?",
+  //     2: "How is the bike sales KPI trending?",
+  //     3: "What data sources are available and what are the interesting fields in each data source?",
+  //     4: "Using the data source 'Incidents, Accidents, & Occupational Safety', can you write an analytical summary of the impact of weather and location on the number of accidents",
+  //   };
     
     const query = seededQuestions[questionNumber as keyof typeof seededQuestions] || '';
     sendMessage(query);
@@ -576,7 +583,7 @@ function AIAssistent() {
     <div className={styles.root}>
       <div className={styles.header}>
         <div className={styles.headerTop}>
-          <h1 className={styles.title}>Tableau AI Assistant</h1>
+          <h1 className={styles.title}>Tableau分析アシスタント</h1>
           <button 
             className={styles.infoButton}
             onClick={toggleSystemPrompt}
@@ -586,42 +593,43 @@ function AIAssistent() {
           </button>
         </div>
         <div className={styles.headerControls}>
+        {/* Ask questions about your data, dashboards, and analytics. Powered by Tableau's MCP. */}
         <p className={styles.subtitle}>
-          Ask questions about your data, dashboards, and analytics. Powered by Tableau's MCP.
+          データ、ダッシュボード、分析について質問してください。Tableau MCPを活用しています。
         </p>
           <div className={styles.seededQuestions}>
-            <span className={styles.seededQuestionsLabel}>Seeded questions:</span>
+            <span className={styles.seededQuestionsLabel}>おすすめ質問:</span>
             <button
               onClick={() => handleSeededQuestion(1)}
               className={styles.seededQuestionButton}
             >
-              Data Question
+              年別の売上確認
             </button>
             <button
               onClick={() => handleSeededQuestion(2)}
               className={styles.seededQuestionButton}
             >
-              Pulse
+              売上トレンド
             </button>
             <button
               onClick={() => handleSeededQuestion(3)}
               className={styles.seededQuestionButton}
             >
-              Datasource Info
+              データソース情報
             </button>
-            <button
+            {/* <button
               onClick={() => handleSeededQuestion(4)}
               className={styles.seededQuestionButton}
             >
               Summary using different data source
-            </button>
+            </button> */}
         </div>
         {messages.length > 0 && (
             <button
               onClick={clearChat}
               className={styles.clearButton}
             >
-              Clear Chat
+              会話クリア
             </button>
           )}
         </div>
@@ -632,9 +640,9 @@ function AIAssistent() {
           {messages.length === 0 && !isLoading ? (
             <div className={styles.emptyState}>
               <div className={styles.emptyStateIcon}>💬</div>
-              <div className={styles.emptyStateText}>Start a conversation</div>
+              <div className={styles.emptyStateText}>こんにちは！</div>
               <div className={styles.emptyStateSubtext}>
-                Ask me about your Tableau data sources, fields, or run queries
+              Tableauのデータソースやフィールド、クエリ実行についてお気軽にご相談ください。
               </div>
             </div>
           ) : (
@@ -750,7 +758,7 @@ function AIAssistent() {
             value={currentQuery}
             onChange={(e) => setCurrentQuery(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Ask about your Tableau data..."
+            placeholder="Tableauのデータに関する質問してください！"
             disabled={isLoading}
             rows={1}
           />
@@ -759,7 +767,7 @@ function AIAssistent() {
             onClick={() => sendMessage(currentQuery)}
             disabled={!currentQuery.trim() || isLoading}
           >
-            {isLoading ? 'Sending...' : 'Send'}
+            {isLoading ? '送信中...' : '送信'}
           </button>
         </div>
       </div>
